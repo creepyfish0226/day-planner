@@ -1,60 +1,25 @@
-$(document).ready(function () {
-    //current date and time
-    var m = moment();
-    var currentTime = m.format('MMMM Do YYYY, h:mm:ss a');
-    var currentDate = m.format("MMM Do YYYY");
-    var currentHour = moment().hours();
-    console.log('current hour: ', currentHour)
+var hour = moment().format("H")
+console.log(hour)
+$("#currentDay").text(moment().format("MMM Do YYYY")   )
+for (var i=9; i<18; i++){
+    console.log("#"+i)
+    if(hour >i){
 
-    // put current date/time in sub title
-    $("#currentDay").text("Today's Date: " + currentDate);
-
-
-    // event listener for save buttons to add to local storage
-    $(".saveBtn").on("click", function () {
-        console.log("button duh");
-        var click = $(this).attr("data-value");
-        var eventInput = $(click).val();
-        localStorage.setItem(click, eventInput);
-    });
-
-    // load from local storage on page load
-
-    // on refresh, loop through time block and grab values from local storage 'getItem' what happens if you don't have a value in a certain time block (this may or may not happen).
-    let timeBlock = ["#9am", "#10am", "#11am", "#12pm", "#1pm", "#2pm", "#3pm", "#4pm", "#5pm"];
-    
-    for (let i = 0; i < timeBlock.length; i++) {
-        let savedEvent = $('.saved-event')
-        console.log('looping through time block to retrieve LS');        
-        $(timeBlock[i]).val(localStorage.getItem(timeBlock[i]));
-    };
-    
-
-    // Change style base on time
-    function timeStyle() {
-        for (let i = 6; i < 18; i++) {
-
-            let hour = '#' + i;
-            let scheduleHour = parseInt($(hour).attr("id"));
-            $(hour).removeClass();
-            if (
-                scheduleHour > currentHour) {
-                $(hour).attr("class", "row future");
-            }
-            else if (
-                scheduleHour === currentHour) {
-                $(hour).attr("class", "row present");
-            }
-            else if (
-                scheduleHour < currentHour) {
-                $(hour).attr("class", "row past");
-            }
-
-        };
+        $("#"+i).addClass("past")
+    }else if(parseInt(hour)===i){
+        $("#"+i).addClass("present")
+    }else{
+        $("#"+i).addClass("future")
     }
-    timeStyle();
+    var local = localStorage.getItem(i)
 
-    // on refresh, loop through time block and grab values from local storage 'getItem' what happens if you don't have a value in a certain time block (this may or may not happen).
-    // var timeBlock = ["#9am", "#10am", "#11am", "#12pm", "#1pm", "#2pm", "#3pm", "#4pm", "#5pm"];
+    if(local !== null){
+        $("#"+i).val(local)
+    }
+}
 
-});
+$(".saveBtn").on("click", function(){
+    var clickedHour = $(this).val()
+    var userText =$("#"+clickedHour).val()
+    localStorage.setItem(clickedHour,userText)
+})
